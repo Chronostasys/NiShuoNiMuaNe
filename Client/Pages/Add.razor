@@ -1,0 +1,91 @@
+﻿@page "/AddorEdit"
+@page "/AddorEdit/{id}"
+<h3>Add</h3>
+<h4>Cai</h4>
+<hr />
+<div class="row">
+    <div class="col-12">
+        <div class="form-group">
+            <label class="control-label">名称</label>
+            <input class="form-control" @bind-value="cai.Name" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">价格</label>
+            <input class="form-control" @bind-value="cai.Price" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">贩卖者</label>
+            <input class="form-control" @bind-value="cai.Seller" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">重量</label>
+            <input class="form-control" @bind-value="cai.Weight" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">保质期</label>
+            <input type="datetime-local" class="form-control" value="@cai.BaoZhiQi.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ','T')" @oninput="Change" />
+        </div>
+        <span class="alert-danger">@error</span>
+        <div class=" form-group">
+            <a href="/AddorEdit" class="btn btn-primary" @onclick="CLick">保存</a>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string id { get; set; }
+    public LimFxApi.Cai cai { get; set; }
+    Guid Id;
+    string error;
+    bool Edit = false;
+    protected override async Task OnInitializedAsync()
+    {
+        if (cai == null)
+        {
+            cai = new LimFxApi.Cai();
+            try
+            {
+                Id = Guid.Parse(id);
+                if (Id != Guid.Empty)
+                {
+                    Edit = true;
+                    cai = await Startup.client.ApiCaisapiGetAsync(Id);
+                }
+            }
+            catch (Exception)
+            {
+            }
+            cai.BaoZhiQi = DateTime.Now;
+        }
+        await base.OnInitializedAsync();
+    }
+
+
+    async Task Change(ChangeEventArgs e)
+    {
+
+        cai.BaoZhiQi = DateTime.Parse(e.Value.ToString().Replace('T', ' '));
+    }
+
+    async Task CLick()
+    {
+        try
+        {
+            if (Edit)
+            {
+                await Startup.client.ApiCaisapiPutAsync(Id, cai);
+            }
+            else
+            {
+                await Startup.client.ApiCaisapiPostAsync(cai);
+            }
+
+            navManager.NavigateTo("/fetchdata", false);
+        }
+        catch (Exception e)
+        {
+
+            error = e.Message;
+        }
+    }
+}

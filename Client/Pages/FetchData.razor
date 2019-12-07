@@ -1,0 +1,74 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+
+<h1>蔡</h1>
+
+<p>调用api获取数据</p>
+<NavLink href="AddorEdit">
+    <span class="oi oi-plus" aria-hidden="true"></span>添加
+</NavLink>
+
+@if (cais == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>菜名</th>
+                <th>菜价</th>
+                <th>贩卖者</th>
+                <th>重量</th>
+                <th>保质期</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cai in cais)
+            {
+                <tr>
+                    <td>@cai.Name</td>
+                    <td>@cai.Price</td>
+                    <td>@cai.Seller</td>
+                    <td>@cai.Weight</td>
+                    <td>@cai.BaoZhiQi.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>
+                        <NavLink href="@("AddorEdit/"+cai.Id.ToString())">
+                            <span class="btn btn-light">
+                                <span class="oi oi-pencil" aria-hidden="true"></span>修改
+                            </span>
+                        </NavLink>
+                        <NavLink href="/fetchdata" @onclick="()=>Delete(cai.Id)">
+                            <span class="btn btn-danger">
+                                <span class="oi oi-delete" aria-hidden="true"></span>删除
+                            </span>
+                        </NavLink>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    ICollection<LimFxApi.Cai> cais;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cais = await Startup.client.ApiCaisapiGetAsync();
+    }
+
+    async void Delete(Guid id)
+    {
+        await Startup.client.ApiCaisapiDeleteAsync(id);
+        await OnInitializedAsync();
+        this.StateHasChanged();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        cais = await Startup.client.ApiCaisapiGetAsync();
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
