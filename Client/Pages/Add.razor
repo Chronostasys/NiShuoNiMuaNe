@@ -1,10 +1,10 @@
 ﻿@page "/AddorEdit"
 @page "/AddorEdit/{id}"
-<h3>Add</h3>
-<h4>Cai</h4>
-<hr />
 <div class="row">
-    <div class="col-12 col-lg-6 col-md-8">
+    <div class="col-12 col-lg-6 col-md-4">
+        <h3>Add</h3>
+        <h4>Cai</h4>
+        <hr />
         <div class="form-group">
             <label class="control-label">名称</label>
             <input class="form-control" @bind-value="cai.Name" />
@@ -30,6 +30,9 @@
             <a href="/AddorEdit" class="btn btn-primary" @onclick="CLick">保存</a>
         </div>
     </div>
+    <div class="col-lg-6 col-md-8">
+        <img class="img-fluid" src="/girl.png">
+    </div>
 </div>
 @code {
     [Parameter]
@@ -43,6 +46,7 @@
         if (cai == null)
         {
             cai = new LimFxApi.Cai();
+            cai.BaoZhiQi = DateTime.Now;
             try
             {
                 Id = Guid.Parse(id);
@@ -55,7 +59,6 @@
             catch (Exception)
             {
             }
-            cai.BaoZhiQi = DateTime.Now;
         }
         await base.OnInitializedAsync();
     }

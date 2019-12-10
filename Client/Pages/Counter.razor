@@ -1,16 +1,18 @@
 ﻿@page "/counter"
 
-<h1>Counter</h1>
-
-<p>Current count: @currentCount</p>
+<h1>Cai</h1>
+@((MarkupString)Startup.html)
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
-    private int currentCount = 0;
+    IFileListEntry file;
+    string html = "";
+    HttpClient client = new HttpClient();
 
-    private void IncrementCount()
+    private async void IncrementCount()
     {
-        currentCount++;
+        Startup.html = await (await client.GetAsync(@"https://localhost:44349/cais/index")).Content.ReadAsStringAsync();
+        StateHasChanged();
     }
 }

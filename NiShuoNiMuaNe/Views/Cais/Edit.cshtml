@@ -3,10 +3,12 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<div style="background-image:url(/1.jpg);background-size:cover;background-repeat:no-repeat;padding:20px"
+>
 
-<h1>Edit</h1>
+<h1>修改数据</h1>
 
-<h4>Cai</h4>
+<h4>你能做的 岂止于此</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -39,14 +41,14 @@
                 <span asp-validation-for="Seller" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="提交" value="保存" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">回到列表</a>
 </div>
 
 @section Scripts {
